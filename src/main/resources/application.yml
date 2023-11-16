@@ -1,0 +1,236 @@
+### ### ### ### ###
+###
+### # Author:
+###
+### - s53kr_lm8a6r (a.k.a. s7a7r)
+### - fauh45
+###
+### # Notes
+###
+### Three dash (---) is used to separate
+### configuration during compilation
+### and therefore you should be able to
+### have multiple occurence of root name
+### without creating multiple file!
+###
+### ### ### ### ###
+
+#-----------------------------------
+--- # Application
+#-----------------------------------
+spring:
+  application:
+    name: spring-boot-multiauth
+  profiles:
+    active:
+      - "@spring.profiles.active@"
+  main:
+    lazy-initialization: false
+    allow-bean-definition-overriding: true
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+
+--- ## File upload limit
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500KB
+      max-request-size: 500KB
+--- ## Spring Actuator Settings
+management:
+  endpoints:
+    web:
+      base-path: "/actuator"
+      exposure:
+        include: "*" # Show every endpoints
+  endpoint:
+    shutdown:
+      enabled: false # Disabled by default, enable to enable remote shutdown
+    logfile:
+      enabled: true # Enable remote logs access (true by default)
+--- ## Logging file settings
+logging:
+  file:
+    path: "logs"
+  logback:
+    rollingpolicy:
+      total-size-cap: 15MB
+      clean-history-on-start: true
+--- ## Production
+spring:
+  config:
+    activate:
+      on-profile: "production"
+  main:
+    lazy-initialization: true
+
+#-----------------------------------
+--- # Spring Quartz
+#-----------------------------------
+
+spring:
+  quartz:
+    job-store-type: memory
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 5 # Use 5 thread to do scheduled task by quartz
+
+#-----------------------------------
+--- # Database
+#-----------------------------------
+spring:
+  ## Datasource
+  datasource:
+    url: jdbc:postgresql://cloudias79.com:5423/db_talentcenter_dev_duplicate
+    username: pgadmin
+    password: majubersama
+    driver-class-name: org.postgresql.Driver
+  ## Configuration
+  jpa:
+    #    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      # COMMENT OUT OR CHANGE TO VALIDATE ON PRODUCTION
+      ddl-auto: update
+
+#-----------------------------------
+--- # SMTP Settings
+#-----------------------------------
+
+spring:
+  mail:
+    # NOTE: Do not use this server in production, no email will ever be sent
+    host: "smtp.gmail.com"
+    port: 587
+    username: "jamilahhandini8@gmail.com"
+    password: "mnpg cwfo ygmg pmky"
+    test-connection: false # Set true in production to test if the mail server is working on startup
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true # Enable if server use tls
+          # Uncomment if server uses SSL instead
+          # socketFactory:
+          #   port: 465
+          #   class: javax.net.ssl.SSLSocketFactory
+
+#-----------------------------------
+--- # Spring Data REST
+#-----------------------------------
+spring:
+  data:
+    rest:
+      base-path: /data
+
+#-----------------------------------
+--- # Application Security
+#-----------------------------------
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google: # OAuth2 OpenID Connect 1.0
+            client-id: 672533721921-v5jlbj48o60ci49hlkhur02b2llp7ah4.apps.googleusercontent.com
+            client-secret: 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
+            provider: google
+          github: # OAuth2 (Non-Standard)
+            client-id: abecae239a1b94b9a8fb
+            client-secret: 8b324ae0812001a52ef69ca34bed48e962f6685f
+            provider: github
+    saml2:
+      relyingparty:
+        registration:
+          auth0: # Auth0 SAML 2.0
+            identityprovider:
+              entity-id: urn:msams-studio.au.auth0.com
+              metadata-uri: https://msams-studio.au.auth0.com/samlp/metadata/gZODkWITDaUzOdWHd0FzMj1wNKVkckZt
+              singlesignon:
+                url: https://msams-studio.au.auth0.com/samlp/gZODkWITDaUzOdWHd0FzMj1wNKVkckZt
+                binding: post
+                sign-request: false
+              verification:
+                credentials:
+                  - certificate-location: https://msams-studio.au.auth0.com/pem
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true
+application:
+  security:
+    strength: 16
+    default-login: s53kr_lm8a6r
+    default-password: $p@s5w0rD_s53K12x
+  cipher:
+    strength: 32
+    secret: $p@s5w0rD_s53K12x
+
+--- ## Development
+spring:
+  config:
+    activate:
+      on-profile: "development"
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+
+#-----------------------------------
+--- # Storage Service (MinIO)
+#-----------------------------------
+
+application:
+  minio:
+    url: https://minio.cloudias79.com/
+    username: devtalentcenter
+    password: as4Dx6L4Uf1zFkyy
+
+#-----------------------------------
+--- # L10n & i18n
+#-----------------------------------
+
+spring:
+  messages:
+    encoding: UTF-8
+    basename: i18n/messages
+
+#-----------------------------------
+--- # L10n & i18n
+#-----------------------------------
+
+#graphql:
+#  playground:
+#    mapping: /graphql-playground
+#    endpoint: /api/graphql
+#    cdn:
+#      enabled: true
+#      version: latest
+#  servlet:
+#    enabled: true
+#    corsEnabled: true
+#    mapping: /graphql
+
+#-----------------------------------
+--- # Miscellanous
+#-----------------------------------
+spring:
+  output:
+    ansi:
+      enabled: always # Just console color, I'm lovin' it!
+
+# # -----------------------------------
+# --- #
+# # -----------------------------------

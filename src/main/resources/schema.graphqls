@@ -1,0 +1,22 @@
+type User {
+    id: ID!
+    username: String!
+    password: String!
+    authority: [String!]!
+}
+
+type TestData {
+    createdBy: User
+    lastModifiedBy: User
+    privateId: ID!
+    privateData: String!
+}
+
+type Query {
+    findAllTestData: [TestData!]!
+}
+
+type Mutation {
+    createUser(username: String!, password: String!, authority: [String!]!): User!
+    createTestData: TestData!
+}
